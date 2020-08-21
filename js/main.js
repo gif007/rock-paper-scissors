@@ -171,6 +171,7 @@ function popChoices(props) {
     let choices = [rock, paper, scissors];
 
     const div = document.createElement('div');
+    div.setAttribute('style', 'display: flex; justify-content: space-around; align-items: center;')
     choices.forEach(element => div.appendChild(element));
     container.appendChild(div);
 }
