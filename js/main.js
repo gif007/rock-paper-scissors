@@ -1,10 +1,60 @@
+// Rock, paper, scissors.
+
+function wipeScreen(){
+    // Clear the game screen
+    while (container.firstChild) {
+        container.removeChild(container.firstChild);
+    }
+}
 
 
-//////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////
-/////                            GAME SCREENS                            /////
-//////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////
+function createScoreCard(props) {
+    // Create score card
+    let winTotal = document.createElement('p');
+    winTotal.style.display = 'inline-block';
+    winTotal.style.paddingLeft = '12px';
+    winTotal.textContent = 'Wins: ' + props.counters.wins;
+
+    let lossTotal = document.createElement('p');
+    lossTotal.style.display = 'inline-block';
+    lossTotal.style.paddingLeft = '12px';
+    lossTotal.textContent = 'Losses: ' + props.counters.losses;
+
+    let tieTotal = document.createElement('p');
+    tieTotal.style.display = 'inline-block';
+    tieTotal.style.paddingLeft = '12px';
+    tieTotal.textContent = 'Ties: ' + props.counters.ties;
+
+    const scoreCard = document.createElement('div');
+    scoreCard.setAttribute('class', 'text-center');
+    scoreCard.appendChild(winTotal);
+    scoreCard.appendChild(lossTotal);
+    scoreCard.appendChild(tieTotal);
+
+    return scoreCard;
+}
+
+
+// Start screen functions
+
+function startScreen() {
+    // Create the start screen
+    wipeScreen();
+
+    const nameInput = createNameInput();
+
+    const startButton = createStartButton(nameInput);
+
+    const header = document.createElement('h1');
+    header.textContent = 'What is your name?';
+    header.setAttribute('class', 'text-center');
+
+    let elementSet = [header, nameInput, startButton];
+    elementSet.forEach(element => container.appendChild(element));
+
+    nameInput.focus();
+}
+
 
 function createNameInput() {
     // Create name input
@@ -27,6 +77,7 @@ function createNameInput() {
     return nameInput;
 }
 
+
 function createStartButton(nameInput) {
     // Create a start game button
     const startButton = document.createElement('button');
@@ -43,29 +94,7 @@ function createStartButton(nameInput) {
 }
 
 
-function startScreen() {
-    // Create the start screen
-    wipeScreen();
-
-    const nameInput = createNameInput();
-
-    const startButton = createStartButton(nameInput);
-
-    const form = document.createElement('div');
-    form.appendChild(nameInput);
-    form.appendChild(startButton);
-    form.setAttribute('class', 'text-center');
-
-    const header = document.createElement('h1');
-    header.textContent = 'What is your name?';
-    header.setAttribute('class', 'text-center');
-
-    let elementSet = [header, nameInput, startButton];
-    elementSet.forEach(element => container.appendChild(element));
-
-    nameInput.focus();
-}
-
+// Player choice screen functions
 
 function beginRoundScreen(props) {
     // Create a screen with player options
@@ -77,91 +106,23 @@ function beginRoundScreen(props) {
     container.appendChild(header);
 
     const nameplate = document.createElement('p');
-    nameplate.textContent = 'Player: ' + props.playerName;
     nameplate.setAttribute('class', 'text-center');
+
+    if (props.playerName) {
+        nameplate.textContent = 'Player: ' + props.playerName;
+    } else {
+        nameplate.textContent = 'Player: Phantom Menace';
+    }
+
     container.appendChild(nameplate);
 
     if (props.counters) {
-        const scoreCard = document.createElement('div');
-        scoreCard.setAttribute('class', 'text-center');
-        let winTotal = document.createElement('p');
-        winTotal.style.display = 'inline-block';
-        winTotal.style.paddingLeft = '12px';
-        winTotal.textContent = 'Wins: ' + props.counters.wins;
-        let lossTotal = document.createElement('p');
-        lossTotal.style.display = 'inline-block';
-        lossTotal.style.paddingLeft = '12px';
-        lossTotal.textContent = 'Losses: ' + props.counters.losses;
-        let tieTotal = document.createElement('p');
-        tieTotal.style.display = 'inline-block';
-        tieTotal.style.paddingLeft = '12px';
-        tieTotal.textContent = 'Ties: ' + props.counters.ties;
-        scoreCard.appendChild(winTotal);
-        scoreCard.appendChild(lossTotal);
-        scoreCard.appendChild(tieTotal);
+        scoreCard = createScoreCard(props);
         container.appendChild(scoreCard);
     }
+
     popChoices(props);
 }
-
-
-function endOfRound(props) {
-    // Create a screen for displaying results
-    wipeScreen();
-    const header1 = document.createElement('h4');
-    header1.setAttribute('class', 'text-center');
-    const header2 = document.createElement('h4');
-    header2.setAttribute('class', 'text-center');
-    const header3 = document.createElement('h1');
-    header3.setAttribute('class', 'text-center');
-    let outcome = '';
-    let result = props.result;
-
-    if (!props.counters) {
-        props.counters = {wins: 0,
-                          losses: 0,
-                          ties: 0}
-    }
-
-    if (result === 0) {
-        outcome = "lost!";
-        props.counters.losses++;
-    } else if (result === 1) {
-        outcome = 'won!';
-        props.counters.wins++;
-    } else {
-        outcome = 'tied!'
-        props.counters.ties++;
-    }
-    header1.textContent = props.playerName + ' has chosen ' + props.playerChoice;
-    header2.textContent = 'Computer has chosen ' + props.computerChoice;
-    header3.textContent = props.playerName + ' has ' + outcome;
-    container.appendChild(header1);
-    container.appendChild(header2);
-    container.appendChild(header3);
-
-    const buttonFrame = document.createElement('div');
-    buttonFrame.setAttribute('class', 'text-center');
-    const replayButton = document.createElement('button');
-    replayButton.setAttribute('class', 'btn btn-info');
-    replayButton.textContent = 'Play again';
-    replayButton.onclick = function () {
-        beginRoundScreen(props);
-    }
-
-    const renameButton = document.createElement('button');
-    renameButton.setAttribute('class', 'ml-2 btn btn-info');
-    renameButton.textContent = 'Choose new name';
-    renameButton.onclick = startScreen;
-    buttonFrame.appendChild(replayButton);
-    buttonFrame.appendChild(renameButton);
-    container.appendChild(buttonFrame);
-}
-
-
-//////////////////////
-// UTILITY FUNCTIONS//
-//////////////////////
 
 
 function popChoices(props) {
@@ -196,14 +157,6 @@ function popChoices(props) {
 }
 
 
-function wipeScreen(){
-    // Clear the game screen
-    while (container.firstChild) {
-        container.removeChild(container.firstChild);
-    }
-}
-
-
 function onChoose(playerChoice, props) {
     // Re-render screen when player selects a choice
     let compChoice = computerPlay();
@@ -215,12 +168,84 @@ function onChoose(playerChoice, props) {
 }
 
 
-//////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////
-/////                            GAME FUNCTIONS                          /////
-//////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////
+// End of round screen functions
 
+function endOfRound(props) {
+    // Create a screen for displaying results
+    wipeScreen();
+
+    if (!props.counters) {
+        props.counters = {wins: 0,
+                          losses: 0,
+                          ties: 0}
+    }
+
+    let result = props.result;
+    let outcome = '';
+
+    if (result === 0) {
+        outcome = "lost!";
+        props.counters.losses++;
+    } else if (result === 1) {
+        outcome = 'won!';
+        props.counters.wins++;
+    } else {
+        outcome = 'tied!'
+        props.counters.ties++;
+    }
+
+    const headers = makeHeaders(props, outcome);
+    headers.forEach(h => container.appendChild(h));
+
+    const buttonFrame = makeButtonFrame(props);
+
+    container.appendChild(buttonFrame);
+}
+
+
+function makeButtonFrame(props) {
+    // Create end of round button group
+    const replayButton = document.createElement('button');
+    replayButton.setAttribute('class', 'btn btn-info');
+    replayButton.textContent = 'Play again';
+
+    replayButton.onclick = function () {
+        beginRoundScreen(props);
+    }
+
+    const renameButton = document.createElement('button');
+    renameButton.setAttribute('class', 'ml-2 btn btn-info');
+    renameButton.textContent = 'Choose new name';
+    renameButton.onclick = startScreen;
+
+    const buttonFrame = document.createElement('div');
+    buttonFrame.setAttribute('class', 'text-center');
+    buttonFrame.appendChild(replayButton);
+    buttonFrame.appendChild(renameButton);
+
+    return buttonFrame;
+}
+
+
+function makeHeaders(props, outcome){
+    // Create end of round headers
+    const header1 = document.createElement('h4');
+    header1.setAttribute('class', 'text-center');
+    header1.textContent = props.playerName + ' has chosen ' + props.playerChoice;
+
+    const header2 = document.createElement('h4');
+    header2.setAttribute('class', 'text-center');
+    header2.textContent = 'Computer has chosen ' + props.computerChoice;
+
+    const header3 = document.createElement('h1');
+    header3.setAttribute('class', 'text-center');
+    header3.textContent = props.playerName + ' has ' + outcome;
+
+    return [header1, header2, header3];
+}
+
+
+// Logic and testing
 
 function computerPlay() {
     // Generate a computer choice
