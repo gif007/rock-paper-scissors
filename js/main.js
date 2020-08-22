@@ -26,7 +26,6 @@ function createScoreCard(props) {
     tieTotal.textContent = 'Ties: ' + props.counters.ties;
 
     const scoreCard = document.createElement('div');
-    scoreCard.setAttribute('class', 'text-center');
     scoreCard.appendChild(winTotal);
     scoreCard.appendChild(lossTotal);
     scoreCard.appendChild(tieTotal);
@@ -42,14 +41,18 @@ function startScreen() {
     wipeScreen();
 
     const nameInput = createNameInput();
-
     const startButton = createStartButton(nameInput);
+
+    const inputArea = document.createElement('div');
+    inputArea.setAttribute('style', 'height: 5rem; display: flex; flex-direction: column; align-items: center; justify-content: space-around')
+    inputArea.appendChild(nameInput);
+    inputArea.appendChild(startButton);
 
     const header = document.createElement('h1');
     header.textContent = 'What is your name?';
     header.setAttribute('class', 'text-center');
 
-    let elementSet = [header, nameInput, startButton];
+    let elementSet = [header, inputArea];
     elementSet.forEach(element => container.appendChild(element));
 
     nameInput.focus();
@@ -63,7 +66,6 @@ function createNameInput() {
     nameInput.setAttribute('maxlength', '20');
     nameInput.setAttribute('id', 'player-name');
     nameInput.setAttribute('placeholder', 'Your name...');
-    nameInput.setAttribute('style', 'display: block; margin: 0 auto;');
     nameInput.addEventListener('keyup', enterInput);
 
     function enterInput(e) {
@@ -83,7 +85,7 @@ function createStartButton(nameInput) {
     const startButton = document.createElement('button');
     startButton.textContent = 'Begin';
     startButton.style.display = 'block';
-    startButton.setAttribute('class', 'mx-auto mt-2 btn btn-info');
+    startButton.setAttribute('class', 'btn btn-info');
 
     startButton.onclick = function () {
         let props = {playerName: nameInput.value};
@@ -102,11 +104,9 @@ function beginRoundScreen(props) {
 
     const header = document.createElement('h2');
     header.textContent = 'Choose Your Weapon'
-    header.setAttribute('class', 'text-center');
     container.appendChild(header);
 
     const nameplate = document.createElement('p');
-    nameplate.setAttribute('class', 'text-center');
 
     if (props.playerName) {
         nameplate.textContent = 'Player: ' + props.playerName;
@@ -195,7 +195,10 @@ function endOfRound(props) {
     }
 
     const headers = makeHeaders(props, outcome);
-    headers.forEach(h => container.appendChild(h));
+    const headersContainer = document.createElement('div');
+    headersContainer.setAttribute('style', 'display: flex; flex-direction: column; align-items: center; justify-content: space-around')
+    headers.forEach(h => headersContainer.appendChild(h));
+    container.appendChild(headersContainer);
 
     const buttonFrame = makeButtonFrame(props);
 
@@ -206,7 +209,7 @@ function endOfRound(props) {
 function makeButtonFrame(props) {
     // Create end of round button group
     const replayButton = document.createElement('button');
-    replayButton.setAttribute('class', 'btn btn-info');
+    replayButton.setAttribute('class', 'my-2 btn btn-info');
     replayButton.textContent = 'Play again';
 
     replayButton.onclick = function () {
@@ -214,12 +217,12 @@ function makeButtonFrame(props) {
     }
 
     const renameButton = document.createElement('button');
-    renameButton.setAttribute('class', 'ml-2 btn btn-info');
+    renameButton.setAttribute('class', 'my-2 btn btn-info');
     renameButton.textContent = 'Choose new name';
     renameButton.onclick = startScreen;
 
     const buttonFrame = document.createElement('div');
-    buttonFrame.setAttribute('class', 'text-center');
+    buttonFrame.setAttribute('style', 'display: flex; justify-content: space-around; align-items: center; width: 100%;');
     buttonFrame.appendChild(replayButton);
     buttonFrame.appendChild(renameButton);
 
@@ -230,15 +233,12 @@ function makeButtonFrame(props) {
 function makeHeaders(props, outcome){
     // Create end of round headers
     const header1 = document.createElement('h4');
-    header1.setAttribute('class', 'text-center');
     header1.textContent = props.playerName + ' has chosen ' + props.playerChoice;
 
     const header2 = document.createElement('h4');
-    header2.setAttribute('class', 'text-center');
     header2.textContent = 'Computer has chosen ' + props.computerChoice;
 
     const header3 = document.createElement('h1');
-    header3.setAttribute('class', 'text-center');
     header3.textContent = props.playerName + ' has ' + outcome;
 
     return [header1, header2, header3];
