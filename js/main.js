@@ -6,27 +6,14 @@
 //////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////
 
-
-function startScreen() {
-    // Create the start screen
-    wipeScreen();
-    const form = document.createElement('form');
+function createNameInput() {
+    // Create name input
     const nameInput = document.createElement('input');
-    form.appendChild(nameInput);
-    form.setAttribute('class', 'text-center');
     nameInput.setAttribute('type', 'text');
     nameInput.setAttribute('maxlength', '20');
     nameInput.setAttribute('id', 'player-name');
     nameInput.setAttribute('placeholder', 'Your name...');
-    const startButton = document.createElement('button');
-    form.appendChild(startButton);
-    const header = document.createElement('h1');
-    header.textContent = 'What is your name?';
-    header.setAttribute('class', 'text-center');
-    startButton.textContent = 'Begin';
-    startButton.style.display = 'block';
-    startButton.setAttribute('class', 'mx-auto mt-2 btn btn-info');
-
+    nameInput.setAttribute('style', 'display: block; margin: 0 auto;');
     nameInput.addEventListener('keyup', enterInput);
 
     function enterInput(e) {
@@ -37,13 +24,45 @@ function startScreen() {
         }
     }
 
+    return nameInput;
+}
+
+function createStartButton(nameInput) {
+    // Create a start game button
+    const startButton = document.createElement('button');
+    startButton.textContent = 'Begin';
+    startButton.style.display = 'block';
+    startButton.setAttribute('class', 'mx-auto mt-2 btn btn-info');
+
     startButton.onclick = function () {
         let props = {playerName: nameInput.value};
         beginRoundScreen(props);
     }
 
-    let elementSet = [header, form];
+    return startButton;
+}
+
+
+function startScreen() {
+    // Create the start screen
+    wipeScreen();
+
+    const nameInput = createNameInput();
+
+    const startButton = createStartButton(nameInput);
+
+    const form = document.createElement('div');
+    form.appendChild(nameInput);
+    form.appendChild(startButton);
+    form.setAttribute('class', 'text-center');
+
+    const header = document.createElement('h1');
+    header.textContent = 'What is your name?';
+    header.setAttribute('class', 'text-center');
+
+    let elementSet = [header, nameInput, startButton];
     elementSet.forEach(element => container.appendChild(element));
+
     nameInput.focus();
 }
 
