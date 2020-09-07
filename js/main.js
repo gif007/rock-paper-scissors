@@ -310,6 +310,6 @@ function displayOutcome(result) {
 //////////////////////////////////////////////////////////////////////////////
 
 const container = document.querySelector('div#game-container');
-container.setAttribute('style', 'width: 500px; height: 500px; border: 2px dashed black; display: flex; flex-direction: column; align-items: center; justify-content: space-around;');
+container.setAttribute('style', 'width: 500px; height: 500px; border: 2px solid black; display: flex; flex-direction: column; align-items: center; justify-content: space-around;');
 
 window.onload = startScreen;
